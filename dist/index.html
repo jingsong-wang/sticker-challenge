@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f1e6" />
+    <meta name="description" content="MISREAD LAB 002：在照片上放一张文字贴纸，观察本机视觉模型会怎样重新读图。" />
+    <title>MISREAD LAB 002 — Sticker Challenge</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./app.mjs"></script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="masthead">
+        <a class="wordmark" href="https://jingsong-wang.github.io/" aria-label="Jingsong Wang 首页">J<span class="wordmark-dot">.</span>W</a>
+        <div class="masthead-center"><span class="masthead-rule"></span> A small experiment in machine perception <span class="masthead-rule"></span></div>
+        <button class="text-button about-trigger" id="about-open" type="button">关于实验 <span aria-hidden="true">↗</span></button>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-kicker"><span class="signal-dot" aria-hidden="true"></span> INTERACTIVE EXPERIMENT <span class="kicker-index">/ 002</span></div>
+          <div class="intro-main">
+            <h1 id="page-title">MISREAD<span class="title-star" aria-hidden="true">✳</span><br /><em>LAB</em> <span class="title-number">002</span></h1>
+            <div class="intro-aside">
+              <div class="edition-stamp">贴纸挑战<br /><span>STICKER CHALLENGE</span></div>
+              <p>一张照片，一张文字贴纸。<br />你能让视觉模型<strong>看错重点</strong>吗？</p>
+            </div>
+          </div>
+          <div class="intro-bottom"><span>01 — 选择关卡</span><span>02 — 摆放贴纸</span><span>03 — 运行真实模型</span></div>
+        </section>
+
+        <div class="game-layout">
+          <aside class="rail" aria-label="关卡与进度">
+            <div class="panel-eyebrow">THE EXPERIMENT <span>↘</span></div>
+            <div class="rail-heading"><span>关卡路线</span><span id="stars-total" aria-label="累计星星">0 ★</span></div>
+            <nav id="level-list" class="level-list" aria-label="选择关卡"></nav>
+            <div class="rail-note"><span class="asterisk">✳</span><p>通过后解锁下一关。贴纸面积 ≤10% 得 3 星，≤20% 得 2 星，≤35% 得 1 星。</p></div>
+          </aside>
+
+          <section class="workspace" aria-labelledby="level-title">
+            <div class="workspace-heading">
+              <div><div class="panel-eyebrow">NOW PLAYING <span>/ <span id="level-number">01</span></span></div><h2 id="level-title">准备开始</h2></div>
+              <div class="level-mark">VISUAL<br />PERCEPTION<br /><span>TEST Nº 002</span></div>
+            </div>
+
+            <div class="mission-strip"><span class="mission-label">本关任务 <span aria-hidden="true">↗</span></span><p id="mission">选择关卡，看看你要让模型读错什么。</p><span class="target-pill">目标：<strong id="target-label">—</strong></span></div>
+
+            <div class="canvas-surround">
+              <div class="canvas-topline"><span>IMAGE / 512 × 512</span><span class="record-mark"><span aria-hidden="true">●</span> LOCAL INFERENCE</span></div>
+              <div class="canvas-frame"><canvas id="game-canvas" width="512" height="512" aria-label="照片与可拖动的文字贴纸；也可使用右侧滑块调整贴纸位置" role="img">当前浏览器不支持 Canvas。</canvas></div>
+              <div class="canvas-footline"><span><span aria-hidden="true">↖</span> 拖动贴纸，或使用坐标滑块精确定位</span><span>TYPE CAN CHANGE WHAT A MODEL SEES.</span></div>
+            </div>
+          </section>
+
+          <aside class="editor" aria-label="贴纸编辑与模型操作">
+            <div class="editor-head"><span class="panel-eyebrow">YOUR MOVE / 01</span><h2>设计你的<br /><em>干扰贴纸<span aria-hidden="true">↗</span></em></h2><p>用一张文字贴纸，改变模型的判断。</p></div>
+
+            <div class="field-group text-field"><label for="sticker-text">贴纸文字 <span>TEXT</span></label><input id="sticker-text" type="text" maxlength="32" value="IPOD" autocomplete="off" spellcheck="false" /><small>最多 32 个字符</small></div>
+
+            <div class="range-group"><div class="range-heading"><label for="sticker-size">贴纸宽度 <span>WIDTH</span></label><output data-output-for="sticker-size" for="sticker-size">45</output></div><input id="sticker-size" type="range" min="12" max="90" value="45" /></div>
+            <div class="range-pair">
+              <div class="range-group"><div class="range-heading"><label for="sticker-x">横向 <span>X</span></label><output data-output-for="sticker-x" for="sticker-x">50</output></div><input id="sticker-x" type="range" min="0" max="100" value="50" /></div>
+              <div class="range-group"><div class="range-heading"><label for="sticker-y">纵向 <span>Y</span></label><output data-output-for="sticker-y" for="sticker-y">50</output></div><input id="sticker-y" type="range" min="0" max="100" value="50" /></div>
+            </div>
+            <div class="range-group"><div class="range-heading"><label for="sticker-angle">角度 <span>ANGLE</span></label><output data-output-for="sticker-angle" for="sticker-angle">0°</output></div><input id="sticker-angle" type="range" min="-30" max="30" value="0" /></div>
+
+            <div class="area-row"><span>贴纸占图面积</span><strong id="area-value">—</strong><small>35% 以内可提交</small></div>
+            <button id="reset-sticker" class="quiet-button" type="button"><span aria-hidden="true">↶</span> 重置贴纸</button>
+
+            <div class="model-box" aria-labelledby="model-title"><div class="model-box-head"><span class="signal-dot" aria-hidden="true"></span><h3 id="model-title">在本机运行模型</h3><span class="model-index">CLIP / 01</span></div><p>首次需下载约 150 MB 模型权重及运行组件，之后在本机运行。照片与贴纸留在你的浏览器中。</p><button id="load-model" class="load-button" type="button">加载模型 <span aria-hidden="true">↗</span></button><button id="cancel-load" class="quiet-button" type="button" hidden>取消下载</button><p id="model-status" class="model-status" role="status" aria-live="polite">等待你开始加载</p><progress id="model-progress" max="100" value="0" aria-label="模型下载进度"></progress></div>
+
+            <div class="action-stack"><button id="run" class="primary-button" type="button" disabled>让 AI 再看一次 <span aria-hidden="true">↗</span></button><button id="blank" class="outline-button" type="button" disabled>空白贴纸对照 <span aria-hidden="true">↗</span></button><p id="live-feedback" class="live-feedback"></p><p>对照使用相同贴纸位置和大小，但不写文字；对照结果不能通关。</p></div>
+          </aside>
+        </div>
+
+        <section class="results" aria-labelledby="results-heading"><div class="results-header"><div><div class="panel-eyebrow">READOUT / 02</div><h2 id="results-heading">模型读到了什么？</h2></div><button id="hint" class="text-button hint-button" type="button">给我一点提示 <span aria-hidden="true">↗</span></button></div><p id="hint-text" class="hint-text" hidden></p><p class="score-explainer">每关只比较固定的几个候选标签。下面是它们之间的<strong>相对分数</strong>，并非模型对真实世界的置信度。</p>
+          <div class="score-grid"><div class="score-card"><div class="score-card-top"><span class="score-step">A / 原图</span><span>BEFORE</span></div><div id="original-scores" class="score-content" aria-live="polite"><p class="empty-score">加载模型并运行后显示原图读数。</p></div></div><div class="score-card score-card-result"><div class="score-card-top"><span class="score-step">B / 你的贴纸</span><span>AFTER</span></div><div id="result-scores" class="score-content" aria-live="polite"><p class="empty-score">提交贴纸后显示挑战读数。</p></div></div><div class="score-card"><div class="score-card-top"><span class="score-step">C / 空白对照</span><span>CONTROL</span></div><div id="control-scores" class="score-content" aria-live="polite"><p class="empty-score">运行空白贴纸对照后显示读数。</p></div></div></div>
+          <div class="result-footer"><div class="result-statement"><span class="statement-mark" aria-hidden="true">✳</span><p id="result-message" role="status" aria-live="polite">准备好后，看看一张贴纸会改变多少。</p></div><button id="next-level" class="next-button" type="button" disabled>下一关 <span aria-hidden="true">→</span></button></div>
+        </section>
+
+        <section class="share-band" aria-labelledby="share-heading"><div><span class="panel-eyebrow">TAKE IT WITH YOU / 03</span><h2 id="share-heading">把这次误读<br />带走。</h2><p>保存挑战卡片或实验数据，记录你提交时的贴纸与读数。</p></div><div class="share-actions"><button id="download-card" type="button" disabled>下载挑战卡片 <span aria-hidden="true">↗</span></button><button id="download-json" type="button" disabled>下载实验数据 <span aria-hidden="true">↓</span></button></div></section>
+      </main>
+
+      <footer class="footer"><div><span>MISREAD LAB</span><span>© 2026 JINGSONG WANG</span></div><div class="footer-links"><a href="https://jingsong-wang.github.io/ai-flip-photo/">上一个实验：AI Flip Photo ↗</a><a href="https://openai.com/index/multimodal-neurons/">研究背景 ↗</a><a href="https://jingsong-wang.github.io/">主页 ↗</a></div><p>这是一次关于视觉分类的实验。CLIP 只在每关预设的候选标签中排序；贴纸文字可能改变排序，但它不会执行指令。</p></footer>
+    </div>
+
+    <dialog id="about" class="site-dialog" aria-labelledby="about-title"><div class="dialog-inner"><div class="dialog-top"><span>MISREAD LAB / ABOUT</span><button id="about-close" class="dialog-close" type="button" aria-label="关闭关于窗口">×</button></div><h2 id="about-title">当文字混进图像，<br /><em>模型会看见什么？</em></h2><p>在这个实验里，你把一张文字贴纸放到照片上，再用浏览器里的 CLIP 模型比较固定候选标签的相对分数。要通关，原图必须先把正确标签排在第一位，贴纸图则要让目标标签独占第一位。</p><p>这是一种视觉分类现象，不是对聊天模型的越狱。空白贴纸对照能帮你分辨文字作用和遮挡作用。模型首次使用需要下载；之后的计算在本机完成。</p><div class="dialog-links"><a href="https://openai.com/index/multimodal-neurons/">阅读研究背景 ↗</a><a href="https://jingsong-wang.github.io/ai-flip-photo/">看看上一个实验 ↗</a></div></div></dialog>
+    <dialog id="export-dialog" class="site-dialog export-dialog" aria-labelledby="export-title"><div class="dialog-inner"><div class="dialog-top"><span>EXPORT / SHARE</span><button id="export-close" class="dialog-close" type="button" aria-label="关闭分享窗口">×</button></div><h2 id="export-title">分享这次<br /><em>视觉误读。</em></h2><p>预览并下载本次提交的实验对比卡片。卡片展示原图、贴纸和模型读数。</p><img id="export-image" alt="本次提交的实验对比卡片" hidden /><div class="dialog-actions"><a id="export-link" download class="primary-button">下载文件 <span aria-hidden="true">↓</span></a></div></div></dialog>
+  </body>
+</html>
