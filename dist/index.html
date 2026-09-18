@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f1e6" />
+    <meta name="theme-color" content="#f5f3ed" />
     <meta name="description" content="MISREAD LAB 002：在照片上放一张文字贴纸，观察本机视觉模型会怎样重新读图。" />
     <title>MISREAD LAB 002 — Sticker Challenge</title>
     <link rel="stylesheet" href="./style.css" />
@@ -12,24 +12,17 @@
   <body>
     <div class="site-shell">
       <header class="masthead">
-        <a class="wordmark" href="https://jingsong-wang.github.io/" aria-label="Jingsong Wang 首页">J<span class="wordmark-dot">.</span>W</a>
-        <div class="masthead-center"><span class="masthead-rule"></span> A small experiment in machine perception <span class="masthead-rule"></span></div>
-        <button class="text-button about-trigger" id="about-open" type="button">关于实验 <span aria-hidden="true">↗</span></button>
+        <a class="brand" href="https://jingsong-wang.github.io/ai-flip-photo/"><span class="brand-mark" aria-hidden="true"></span><b>MISREAD<span> LAB</span></b></a>
+        <span class="edition">可玩的多模态安全实验 / 002</span>
+        <nav class="header-nav"><button class="text-button" id="about-open" type="button">关于实验</button><a href="https://github.com/jingsong-wang/sticker-challenge">GitHub ↗</a></nav>
       </header>
 
       <main>
+<div id="play-view">
         <section class="intro" aria-labelledby="page-title">
-          <div class="intro-kicker"><span class="signal-dot" aria-hidden="true"></span> INTERACTIVE EXPERIMENT <span class="kicker-index">/ 002</span></div>
-          <div class="intro-main">
-            <h1 id="page-title">MISREAD<span class="title-star" aria-hidden="true">✳</span><br /><em>LAB</em> <span class="title-number">002</span></h1>
-            <div class="intro-aside">
-              <div class="edition-stamp">贴纸挑战<br /><span>STICKER CHALLENGE</span></div>
-              <p>一张照片，一张文字贴纸。<br />你能让视觉模型<strong>看错重点</strong>吗？</p>
-            </div>
-          </div>
-          <div class="intro-bottom"><span>01 — 选择关卡</span><span>02 — 摆放贴纸</span><span>03 — 运行真实模型</span></div>
+          <div><div class="intro-kicker"><span class="signal-dot" aria-hidden="true"></span> AI 贴纸挑战 / THE TYPOGRAPHIC TRICK</div><h1 id="page-title">贴上几个字，<em>它就看错了？</em></h1></div>
+          <div class="intro-aside"><p>一张照片，一张你设计的贴纸。<br>从零开始，让视觉模型改变判断。</p><small>纯浏览器推理 · 三关挑战 · 照片不上传</small></div>
         </section>
-
         <div class="game-layout">
           <aside class="rail" aria-label="关卡与进度">
             <div class="panel-eyebrow">THE EXPERIMENT <span>↘</span></div>
@@ -56,9 +49,9 @@
           <aside class="editor" aria-label="贴纸编辑与模型操作">
             <div class="editor-head"><span class="panel-eyebrow">YOUR MOVE / 01</span><h2>设计你的<br /><em>干扰贴纸<span aria-hidden="true">↗</span></em></h2><p>用一张文字贴纸，改变模型的判断。</p></div>
 
-            <div class="field-group text-field"><label for="sticker-text">贴纸文字 <span>TEXT</span></label><input id="sticker-text" type="text" maxlength="32" value="IPOD" autocomplete="off" spellcheck="false" /><small>最多 32 个字符</small></div>
+            <div class="field-group text-field"><label for="sticker-text">贴纸文字 <span>TEXT</span></label><input id="sticker-text" type="text" maxlength="32" value="" placeholder="你想在贴纸上写什么？" autocomplete="off" spellcheck="false" /><small>自由输入，最多 32 个字符；卡住了可以查看提示</small></div>
 
-            <div class="range-group"><div class="range-heading"><label for="sticker-size">贴纸宽度 <span>WIDTH</span></label><output data-output-for="sticker-size" for="sticker-size">45</output></div><input id="sticker-size" type="range" min="12" max="90" value="45" /></div>
+            <div class="range-group"><div class="range-heading"><label for="sticker-size">贴纸宽度 <span>WIDTH</span></label><output data-output-for="sticker-size" for="sticker-size">25</output></div><input id="sticker-size" type="range" min="12" max="90" value="25" /></div>
             <div class="range-pair">
               <div class="range-group"><div class="range-heading"><label for="sticker-x">横向 <span>X</span></label><output data-output-for="sticker-x" for="sticker-x">50</output></div><input id="sticker-x" type="range" min="0" max="100" value="50" /></div>
               <div class="range-group"><div class="range-heading"><label for="sticker-y">纵向 <span>Y</span></label><output data-output-for="sticker-y" for="sticker-y">50</output></div><input id="sticker-y" type="range" min="0" max="100" value="50" /></div>
@@ -80,6 +73,22 @@
         </section>
 
         <section class="share-band" aria-labelledby="share-heading"><div><span class="panel-eyebrow">TAKE IT WITH YOU / 03</span><h2 id="share-heading">把这次误读<br />带走。</h2><p>保存挑战卡片或实验数据，记录你提交时的贴纸与读数。</p></div><div class="share-actions"><button id="download-card" type="button" disabled>下载挑战卡片 <span aria-hidden="true">↗</span></button><button id="download-json" type="button" disabled>下载实验数据 <span aria-hidden="true">↓</span></button></div></section>
+</div>
+<section id="ending" class="ending" hidden aria-labelledby="ending-title">
+ <div class="intro-kicker"><span class="signal-dot"></span> CHALLENGE COMPLETE / BEHIND THE MISREAD</div>
+ <h1 id="ending-title" tabindex="-1">你骗过了它。<em>然后呢？</em></h1>
+ <div class="completion"><span>三关完成</span><strong id="ending-stars">— / 9</strong><span>星星记录</span></div>
+ <p class="ending-lead">物体没变，模型的判断却变了。你刚刚体验的是<strong>文字贴纸攻击（typographic attack）</strong>。</p>
+ <div class="evidence"><span class="panel-eyebrow">YOUR EXPERIMENT</span><p id="ending-evidence"></p></div>
+ <div class="explain-grid">
+  <article><span>01 / 它在比较什么？</span><h2>照片和标签，谁更接近。</h2><p>CLIP 把图像和文字描述分别编码，再比较它们的相似度。本游戏在固定的 8 个候选标签中排序；分数最高的标签，就是这次的判断。</p></article>
+  <article><span>02 / 文字为什么有效？</span><h2>它也“看见”了你写的字。</h2><p>图像里的文字也可能激活相关的语义特征。贴纸会改变整张图像的表示，有时文字线索的影响足以让目标标签超过原来的物体。大小、位置和遮挡都会影响结果。</p></article>
+  <article><span>03 / 怎样判断原因？</span><h2>去掉文字，再做一次。</h2><p>同位置、同大小的空白贴纸保留了遮挡。如果空白时仍识别原物体，有字时却发生误判，这支持文字参与了干扰。但它不能直接证明某个神经元或注意力区域就是原因。</p></article>
+ </div>
+ <aside class="research-note"><span>WHY SAFETY?</span><p>图像中的文字可以干扰视觉判断。但这里演示的是 <strong>CLIP 分类排序的变化</strong>，不是聊天模型执行了恶意指令，也不等于 MLLM 越狱。相对分数只针对这 8 个候选标签，不能当成真实世界的置信度。</p><a href="https://openai.com/index/multimodal-neurons/" target="_blank" rel="noreferrer">阅读原始研究 ↗</a><small>研究背景包含对 CLIP RN50x4 的分析；本游戏使用 ViT-B/32，不声称复现其具体神经元机制。</small></aside>
+ <div class="ending-actions"><button id="back-to-game" class="primary-button">回到实验，做个对照 ↗</button><a class="outline-button" href="https://jingsong-wang.github.io/ai-flip-photo/">另一个误读：AI 变脸照 ↗</a></div>
+</section>
+<button id="ending-open" class="text-button ending-revisit" hidden>已通关 · 再看原理解密 →</button>
       </main>
 
       <footer class="footer"><div><span>MISREAD LAB</span><span>© 2026 JINGSONG WANG</span></div><div class="footer-links"><a href="https://jingsong-wang.github.io/ai-flip-photo/">上一个实验：AI Flip Photo ↗</a><a href="https://openai.com/index/multimodal-neurons/">研究背景 ↗</a><a href="https://jingsong-wang.github.io/">主页 ↗</a></div><p>这是一次关于视觉分类的实验。CLIP 只在每关预设的候选标签中排序；贴纸文字可能改变排序，但它不会执行指令。</p></footer>

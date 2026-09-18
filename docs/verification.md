@@ -11,3 +11,9 @@ Real browser CLIP q8 WASM, fixed eight labels and template documented in README.
 Cat blank-sticker control (same 45% width): cat remained top at 93.4%; pizza was 0.8%. Sequential unlocks were exercised across all three levels. Native Node CLIP q8 experiments also passed these level recipes, with different numbers due to rendering/preprocessing/backend differences; browser numbers above are authoritative for this run.
 
 Rule tests cover valid unique flip, area-star boundaries, wrong baseline, tied results, invalid/empty scores, blank control, stale edits, rotated bounds and local progress validation. These tests do not mock a model or claim attack success.
+
+## Revision: unified interface and challenge journey
+- Shared MISREAD LAB identity, palette, typography and rounded experiment panels with AI Flip Photo.
+- Every level and reset starts with empty text and 25% width; hints reveal concept, keyword, then geometry on separate clicks.
+- Completing all three levels unlocks a dedicated explanation view with the latest successful run, scientific limitations and research link. Existing progress remains valid.
+- Verification: 7 Node tests passed; browser first and final levels passed with manually entered stickers; reset and level change cleared text; three hint steps and completion/back navigation passed; no browser errors. At a 390px viewport the document width and scroll width were both 375px (scrollbar excluded), with the editor visually checked.
